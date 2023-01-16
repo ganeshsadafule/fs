@@ -1,0 +1,199 @@
+
+#!/bin/bash
+
+# Set threshold for file system usage
+THRESHOLD=90
+
+# Get file system usage information
+USAGE=$(df -kP | awk '{print $5 " " $6}' | grep -v Use)
+
+# Initialize variable to hold message body
+MESSAGE=""
+
+# Loop through each line of usage information
+while read -r line; do
+    # Get usage percentage and file system name
+    USAGE_PERCENTAGE=$(echo $line | awk '{print $1}' | tr -d '%')
+    FS_NAME=$(echo $line | awk '{print $2}')
+
+    # Check if usage percentage is above threshold
+    if [[ $USAGE_PERCENTAGE -ge $THRESHOLD ]]; then
+        # Add file system name and usage percentage to message body
+        MESSAGE="$MESSAGE <tr><td>$FS_NAME</td><td>$USAGE_PERCENTAGE%</td></tr>"
+    fi
+done <<< "$USAGE"
+
+# Check if message body is not empty
+if [[ -n $MESSAGE ]]; then$
+echo f
+    # Create HTML email message
+    HTML_MESSAGE="<html><body><table><tr><th>File System</th><th>Usage (%)</th></tr>$MESSAGE</table></body></html>"
+
+    # Send email with HTML message
+    echo $HTML_MESSAGE | mail -s "File System Usage Alert" -a "Content-type: text/html" your_email@example.com
+fi
+ $5
+ 
+===============================================================================================
+#!/bin/bash
+
+# Set the threshold for file system usage
+THRESHOLD=90
+
+# Get the current file system usage
+USAGE=$(df -g | awk '{print $1,$5}' | grep -v Filesystem | grep -v Use | awk '{if($2 > "'$THRESHOLD'") print}')
+
+if [ -n "$USAGE" ]; then
+    # Create the HTML message
+    MESSAGE="<html><body><p>File system usage is above threshold on $(hostname) :</p><br><table border=1><tr><th>File System</th><th>Usage</th></tr>"
+    while read -r line; do
+        FS=$(echo $line | awk '{print $1}')
+        FS_USAGE=$(echo $line | awk '{print $2}')
+        MESSAGE="$MESSAGE<tr><td>$FS</td><td>$FS_USAGE%</td></tr>"
+    done <<< "$USAGE"
+    MESSAGE="$MESSAGE</table></body></html>"
+
+    # Send the email
+    echo "$MESSAGE" | mail -a "Content-type: text/html" -s "File System Alert" admin@example.com
+else
+    echo "File system usage is below threshold on $(hostname)"
+fi
+=============================================================================================
+#!/bin/sh
+
+# define the file system to be monitored
+FILESYSTEM=/path/to/filesystem
+
+# define the threshold for available space (in MB)
+THRESHOLD=1000
+
+# check the available space on the file system
+AVAILABLE=`df -m $FILESYSTEM | awk '{print $4}' | tail -1`
+
+# compare the available space to the threshold
+if [ $AVAILABLE -lt $THRESHOLD ]; then
+    # send an email alert if the available space is less than the threshold
+    echo "Low disk space on $FILESYSTEM. Available: $AVAILABLE MB" | mail -s "Low Disk Space Alert" admin@example.com
+fi
+
+
+===========================================================================================
+#!/bin/bash
+
+# Set threshold for alerting (in percent)
+threshold=90
+
+# Get current file system usage
+usage=$(df -P | awk '{print $5}' | grep -v Use | sort -n | tail -1 | cut -d'%' -f1)
+
+# Check if usage is above threshold
+if [ "$usage" -gt "$threshold" ]; then
+  # Send alert
+  echo "File system usage is over threshold: $usage%"
+else
+  # Print usage
+  echo "Current file system usage: $usage%"
+fi
+===========================================================#!/bin/sh
+
+# Set the threshold for file system usage
+THRESHOLD=80
+
+# Get the current file system usage
+USAGE=$(df -g | awk '{print $5}' | grep -v Use)
+
+# Check if any file system usage is above the threshold
+for i in $USAGE
+do
+  if [ $i -gt $THRESHOLD ]
+  then
+    # Send an email alert if above threshold
+    echo "File system usage is above threshold on $(hostname)" | mail -s "File System Alert" admin@example.com
+  fi
+done
+============================================================================================================
+#!/bin/bash
+
+# Set the threshold for file system usage
+THRESHOLD=80
+
+# Set the directory to monitor
+DIR="/path/to/directory"
+
+# Get the current file system usage
+USAGE=$(df -g $DIR | awk 'NR==2 {print $5}' | cut -d'%' -f1)
+
+# Check if file system usage is above the threshold
+if [ $USAGE -gt $THRESHOLD ]
+then
+    # Send an email alert if above threshold
+    echo "File system usage is above threshold on $(hostname) for directory $DIR" | mail -s "File System Alert" admin@example.com
+else
+    echo "File system usage is below threshold on $(hostname) for directory $DIR"
+fi
+
+
+#!/bin/bash
+
+# Set the threshold for file system usage
+THRESHOLD=80
+
+# Set the file systems to monitor
+FILESYSTEMS="/dev/dasda /dev/dasdb /dev/dasdc"
+
+# Loop through the file systems to monitor
+for filesystem in $FILESYSTEMS
+do
+  # Get the current usage of the file system
+  USAGE=$(df -g $filesystem | awk '{print $5}' | grep -v Use | sed 's/%//')
+
+  # Check if the usage is above the threshold
+  if [ $USAGE -gt $THRESHOLD ]
+  then
+    # Send an email alert if above threshold
+    echo "File system $filesystem usage is above threshold on $(hostname)" | mail -s "File System Alert" admin@example.com
+  fi
+done
+
+=====================================================================================================================
+#!/bin/sh
+
+# Set the threshold for file system usage
+THRESHOLD=80
+
+# Get the current file system usage
+USAGE=$(lsfs | awk '{print $4}' | grep -v %)
+
+# Get the current date and time
+DATE=$(date +"%Y-%m-%d %T")
+
+# Check if any file system usage is above the threshold
+for i in $USAGE
+do
+  if [ $i -gt $THRESHOLD ]
+  then
+    # Log the usage and date/time to a file
+    echo "File system usage is above threshold on $(hostname) at $DATE" >> /path/to/logfile.log
+  fi
+done
+================================================================================================================
+#!/bin/sh
+
+# Set the threshold for file system usage
+THRESHOLD=80
+
+# Get the current file system usage
+USAGE=$(df -g | awk '{print $5}' | grep -v Use)
+
+# Check if any file system usage is above the threshold
+for i in $USAGE
+do
+  if [ $i -gt $THRESHOLD ]
+  then
+    # Send an email alert if above threshold
+    echo "File system usage is above threshold on $(hostname)" | mail -s "File System Alert" admin@example.com
+  fi
+done
+
+# schedule this script to run every hour
+echo "0 * * * * /path/to/script.sh" | crontab -

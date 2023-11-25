@@ -1,69 +1,18 @@
 {
   "variables": [
     {
-      "name": "Sealid",
+      "name": "Country",
       "type": "custom",
-      "multi": false,
-      "values": "109892,109895,102565,456556"
+      "options": ["USA", "Canada", "Germany"]
     },
     {
-      "name": "EnvType",
+      "name": "City",
       "type": "custom",
-      "multi": false,
-      "values": "DEV,PROD,UAT",
-      "query": "Sealid"
-    },
-    {
-      "name": "DB_Name",
-      "type": "custom",
-      "multi": false,
-      "query": "EnvType",
-      "options": [
-        {
-          "value": "PDB1,PDB2,PDB3,PDB4",
-          "label": "PROD"
-        },
-        {
-          "value": "UDB1,UDB2,UDB3,UDB4",
-          "label": "UAT"
-        },
-        {
-          "value": "DDB1,DDB2,DDB3",
-          "label": "DEV"
-        }
-      ]
-    },
-    {
-      "name": "DB_Type",
-      "type": "custom",
-      "multi": false,
-      "query": "DB_Name",
-      "options": [
-        {
-          "value": "Primary",
-          "label": "Primary"
-        },
-        {
-          "value": "Secondary",
-          "label": "Secondary"
-        }
-      ]
-    },
-    {
-      "name": "target_name",
-      "type": "custom",
-      "multi": true,
-      "query": "DB_Type",
-      "options": [
-        {
-          "value": "disk1,disk2,disk3,disk4",
-          "label": "Primary"
-        },
-        {
-          "value": "disk5,disk6,disk7,disk8,disk9,disk10",
-          "label": "Secondary"
-        }
-      ]
+      "options": {
+        "USA": ["New York", "Los Angeles", "Chicago"],
+        "Canada": ["Toronto", "Vancouver", "Montreal"],
+        "Germany": ["Berlin", "Munich", "Hamburg"]
+      }
     }
   ]
 }
